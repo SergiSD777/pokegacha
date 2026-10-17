@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pokégacha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e141b;
+            --bg2: #131c26;
+            --panel: #182330;
+            --panel2: #1e2b3a;
+            --line: #2a3a4d;
+            --text: #eaf1f5;
+            --muted: #8398ab;
+            --accent: #5eead4;
+            --accent-dark: #0c2a27;
+            --blue: #60a5fa;
+            --warn: #fb7185;
+            --gold: #fbbf24;
+            --radius: 14px;
+            --display: 'Sora', system-ui, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(900px 500px at 15% -10%, rgba(94, 234, 212, .08), transparent 60%),
+                radial-gradient(700px 400px at 100% 0%, rgba(96, 165, 250, .07), transparent 60%),
+                var(--bg);
+            background-attachment: fixed;
+            color: var(--text);
+            font: 15px/1.5 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2 {
+            font-family: var(--display);
+            margin: 0;
+            letter-spacing: -.01em
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 13.5px
+        }
+
+        /* ---------- Botones e inputs ---------- */
+        button {
+            font: 600 14px/1 'Inter', system-ui, sans-serif;
+            background: var(--accent);
+            color: var(--accent-dark);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: transform .12s, background .15s, border-color .15s, opacity .15s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            background: #7ff3df
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0)
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        button.ghost {
+            background: transparent;
+            color: var(--text);
+            border-color: var(--line)
+        }
+
+        button.ghost:hover:not(:disabled) {
+            background: var(--panel2);
+            border-color: #3b516a
+        }
+
+        button.danger {
+            background: transparent;
+            color: var(--warn);
+            border-color: rgba(251, 113, 133, .35)
+        }
+
+        button.danger:hover:not(:disabled) {
+            background: rgba(251, 113, 133, .1)
+        }
+
+        button.big {
+            padding: 15px 28px;
+            font-size: 15px
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        input,
+        select {
+            font: 500 14px 'Inter', system-ui, sans-serif;
+            background: var(--bg2);
+            color: var(--text);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        input::placeholder {
+            color: #5b6e80
+        }
+
+        input[type=search] {
+            flex: 1;
+            min-width: 180px
+        }
+
+        /* ---------- Inicio ---------- */
+        #start {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px
+        }
+
+        .welcome {
+            width: 100%;
+            max-width: 420px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6);
+        }
+
+        .welcome h1 span {
+            color: var(--accent)
+        }
+
+        .welcome>p {
+            margin: 8px 0 28px
+        }
+
+        .welcome form,
+        .welcome .box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .welcome .box {
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .welcome label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted)
+        }
+
+        /* ---------- App ---------- */
+        #app {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 16px 48px
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .trainer {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            color: var(--accent-dark);
+            font: 700 18px var(--display);
+        }
+
+        .trainer small {
+            display: block;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .trainer b {
+            font: 600 16px var(--display)
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 8px 14px;
+        }
+
+        .stat i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--c)
+        }
+
+        .stat span {
+            display: block;
+            color: var(--muted);
+            font-size: 11.5px;
+            line-height: 1.2
+        }
+
+        .stat b {
+            font: 600 17px/1.2 var(--display)
+        }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 5px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background: transparent;
+            color: var(--muted);
+            padding: 10px 18px
+        }
+
+        nav button:hover:not(:disabled) {
+            background: var(--panel2);
+            color: var(--text);
+            transform: none
+        }
+
+        nav button.on {
+            background: var(--accent);
+            color: var(--accent-dark)
+        }
+
+        nav .spacer {
+            flex: 1
+        }
+
+        nav button.danger {
+            padding: 10px 14px;
+            font-size: 13px
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 24px;
+        }
+
+        .panel-head {
+            margin-bottom: 20px
+        }
+
+        /* ---------- Layout + Récords ---------- */
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 18px;
+            align-items: start
+        }
+
+        .content {
+            min-width: 0
+        }
+
+        .records {
+            position: sticky;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        .rec-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px
+        }
+
+        .rec-card.now {
+            background: radial-gradient(ellipse at 100% 0%, rgba(94, 234, 212, .12), transparent 60%), var(--panel)
+        }
+
+        .rec-card.best {
+            border-color: rgba(251, 191, 36, .35);
+            background: radial-gradient(ellipse at 100% 0%, rgba(251, 191, 36, .16), transparent 60%), var(--panel)
+        }
+
+        .rec-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+
+        .rec-card.best .rec-label {
+            color: var(--gold)
+        }
+
+        .rec-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 6px 0 2px
+        }
+
+        .rec-num {
+            font: 700 60px/1 var(--display);
+            font-variant-numeric: tabular-nums
+        }
+
+        .rec-card.now .rec-num {
+            color: var(--accent)
+        }
+
+        .rec-card.best .rec-num {
+            color: var(--gold)
+        }
+
+        .rec-sprite {
+            width: 84px;
+            height: 84px;
+            flex-shrink: 0
+        }
+
+        .rec-sprite img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain
+        }
+
+        .rec-name {
+            font: 600 15px var(--display)
+        }
+
+        .rec-progress {
+            height: 8px;
+            background: #0b1118;
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 14px 0 8px
+        }
+
+        .rec-progress i {
+            display: block;
+            height: 100%;
+            width: 0;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #34d399, var(--accent));
+            transition: width .4s ease
+        }
+
+        .rec-hint {
+            font-size: 12.5px;
+            color: var(--muted)
+        }
+
+        @media (max-width: 860px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .records {
+                position: static;
+                display: grid;
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        @media (max-width: 560px) {
+            .rec-card {
+                padding: 14px
+            }
+
+            .rec-num {
+                font-size: 40px
+            }
+
+            .rec-sprite {
+                width: 56px;
+                height: 56px
+            }
+
+            .rec-name {
+                font-size: 13px
+            }
+        }
+
+        .head-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .zone {
+            text-align: right;
+            background: var(--bg2);
+            border: 1px solid rgba(251, 191, 36, .35);
+            border-radius: 12px;
+            padding: 8px 14px
+        }
+
+        .zone b {
+            display: block;
+            font: 700 16px var(--display);
+            color: var(--gold)
+        }
+
+        .zone span {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .zone-side {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            flex-wrap: wrap
+        }
+
+        .zone-side>button {
+            padding: 8px 14px;
+            font-size: 13px
+        }
+
+        .znote {
+            font-size: 11.5px;
+            color: var(--muted);
+            margin-top: 6px
+        }
+
+        .znote.warn {
+            color: var(--warn)
+        }
+
+        .pips {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-end;
+            margin-top: 6px
+        }
+
+        .pips i {
+            width: 18px;
+            height: 6px;
+            border-radius: 99px;
+            background: #0b1118
+        }
+
+        .pips i.done {
+            background: var(--gold)
+        }
+
+        .pips i.cur {
+            background: var(--accent)
+        }
+
+        /* ---------- Combate ---------- */
+        .arena {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            gap: 8px;
+            padding: 24px 16px 20px;
+            border-radius: 16px;
+            background:
+                radial-gradient(ellipse at 50% 120%, rgba(94, 234, 212, .13), transparent 60%),
+                linear-gradient(180deg, var(--bg2), #0f1822);
+            border: 1px solid var(--line);
+        }
+
+        .vs {
+            font: 700 13px var(--display);
+            color: var(--muted);
+            padding-bottom: 150px
+        }
+
+        .mon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 0
+        }
+
+        .sprite {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: grid;
+            place-items: center
+        }
+
+        .sprite::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            width: 120px;
+            height: 20px;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse, rgba(0, 0, 0, .55), transparent 70%);
+            z-index: 0;
+        }
+
+        .sprite img {
+            position: relative;
+            z-index: 1;
+            width: 150px;
+            height: 150px;
+            transition: transform .15s, filter .15s, opacity .4s
+        }
+
+        .mon.hit-me img {
+            animation: shakeL .4s
+        }
+
+        .mon.hit-foe img {
+            animation: shakeR .4s
+        }
+
+        .mon img.faint {
+            opacity: .25;
+            filter: grayscale(1);
+            transform: translateY(10px) scale(.92)
+        }
+
+        @keyframes shakeL {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-10px);
+                filter: brightness(2)
+            }
+
+            60% {
+                transform: translateX(6px)
+            }
+        }
+
+        @keyframes shakeR {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(10px);
+                filter: brightness(2)
+            }
+
+            60% {
+                transform: translateX(-6px)
+            }
+        }
+
+        .info {
+            width: 100%;
+            max-width: 250px;
+            margin-top: 10px;
+            background: rgba(24, 35, 48, .85);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .info-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        .name {
+            font: 600 15px var(--display);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .tag {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 99px;
+            background: rgba(94, 234, 212, .14);
+            color: var(--accent);
+        }
+
+        .tag.foe {
+            background: rgba(251, 113, 133, .14);
+            color: var(--warn)
+        }
+
+        .bar {
+            height: 8px;
+            background: #0b1118;
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 8px 0 5px
+        }
+
+        .bar i {
+            display: block;
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #34d399, var(--accent));
+            transition: width .4s ease;
+        }
+
+        .bar i.mid {
+            background: linear-gradient(90deg, #f59e0b, var(--gold))
+        }
+
+        .bar i.low {
+            background: linear-gradient(90deg, #e11d48, var(--warn))
+        }
+
+        .hp {
+            font-size: 12px;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums
+        }
+
+        .log {
+            height: 110px;
+            overflow-y: auto;
+            margin: 16px 0;
+            padding: 12px 14px;
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .log p {
+            margin: 3px 0;
+            color: var(--muted)
+        }
+
+        .log p:first-child {
+            color: var(--text)
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        /* ---------- Gacha ---------- */
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .pull {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 230px;
+            margin: 20px 0;
+            border: 1px dashed var(--line);
+            border-radius: 16px;
+            background: radial-gradient(ellipse at 50% 100%, rgba(251, 191, 36, .07), transparent 65%), var(--bg2);
+            text-align: center;
+            padding: 16px;
+        }
+
+        .pull img {
+            width: 140px;
+            height: 140px;
+            animation: pop .5s cubic-bezier(.2, 1.4, .4, 1)
+        }
+
+        .pull b {
+            font: 600 16px var(--display)
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(.4);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        /* ---------- Colección ---------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px;
+            margin-top: 18px
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 4px;
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px 14px 14px;
+            transition: border-color .15s, transform .15s;
+        }
+
+        .card:hover {
+            border-color: #3b516a;
+            transform: translateY(-2px)
+        }
+
+        .card.sel {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent) inset, 0 10px 30px -12px rgba(94, 234, 212, .35)
+        }
+
+        .card img {
+            width: 104px;
+            height: 104px
+        }
+
+        .card .name {
+            font-size: 15px;
+            max-width: 100%
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: 8px 0 6px
+        }
+
+        .chip {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--muted);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .chip b {
+            color: var(--text);
+            font-weight: 600
+        }
+
+        .move {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-bottom: 10px
+        }
+
+        .move b {
+            color: var(--text);
+            font-weight: 600
+        }
+
+        .card button {
+            width: 100%;
+            margin-top: auto;
+            padding: 10px
+        }
+
+        .card button+button {
+            margin-top: 8px
+        }
+
+        .card button.upg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 9px 10px
+        }
+
+        .card button.upg small {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--gold);
+            font-variant-numeric: tabular-nums
+        }
+
+        .move .up {
+            color: var(--gold)
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 32px 0;
+            color: var(--muted)
+        }
+
+        @media (max-width: 560px) {
+            h1 {
+                font-size: 28px
+            }
+
+            .welcome {
+                padding: 28px 22px
+            }
+
+            .panel {
+                padding: 16px
+            }
+
+            .arena {
+                padding: 16px 8px;
+                gap: 4px
+            }
+
+            .sprite {
+                width: 110px;
+                height: 110px
+            }
+
+            .sprite img {
+                width: 104px;
+                height: 104px
+            }
+
+            .sprite::after {
+                width: 84px
+            }
+
+            .vs {
+                padding-bottom: 110px;
+                font-size: 11px
+            }
+
+            .info {
+                padding: 8px 9px
+            }
+
+            .name {
+                font-size: 13px
+            }
+
+            nav button {
+                padding: 10px 12px
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+                animation: none !important
+            }
+        }
+
+        .desc {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin: 4px 0 8px
+        }
+
+        .chip.mod {
+            border-color: rgba(251, 191, 36, .55)
+        }
+
+        .chip.mod b {
+            color: var(--gold)
+        }
+
+        .chip .from {
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .bag-title {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .bag-title h2 {
+            margin: 0
+        }
+
+        .result-card {
+            grid-column: 1 / -1;
+            max-width: 380px;
+            margin: 0 auto;
+            width: 100%
+        }
+
+        .result-card .row {
+            justify-content: center;
+            margin-top: 10px
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PANTALLA DE INICIO -->
+    <section id="start">
+        <div class="welcome">
+            <h1>Poké<span>gacha</span></h1>
+            <p class="note">Combate, sube de nivel y consigue nuevos compañeros.</p>
+            <div id="continueBox" class="box hidden">
+                <p class="note" id="continueText"></p>
+                <button id="continueBtn" class="big">Continuar partida</button>
+            </div>
+            <form id="newForm">
+                <label for="trainerName">Nombre de entrenador</label>
+                <input id="trainerName" maxlength="16" placeholder="Ej: Ash" required autocomplete="off">
+                <button type="submit" class="big">Nueva partida</button>
+                <p class="note hidden" id="overwriteNote">Crear una partida nueva borrará la guardada.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- JUEGO -->
+    <main id="app" class="hidden">
+        <header>
+            <div class="trainer">
+                <div class="avatar" id="hAvatar"></div>
+                <div><small>Entrenador</small><b id="hName"></b></div>
+            </div>
+            <div class="stats">
+                <div class="stat" style="--c:var(--blue)"><i></i>
+                    <div><span>Poder de entrenador</span><b id="hPower"></b></div>
+                </div>
+                <div class="stat" style="--c:var(--gold)"><i></i>
+                    <div><span>Monedas</span><b id="hCoins"></b></div>
+                </div>
+                <div class="stat" style="--c:var(--accent)"><i></i>
+                    <div><span>Tickets</span><b id="hTickets"></b></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="layout">
+            <aside class="records">
+                <div class="rec-card now">
+                    <div class="rec-label">Run actual</div>
+                    <div class="rec-body">
+                        <div class="rec-num" id="runNowNum">0</div>
+                        <div class="rec-sprite" id="runNowImg"></div>
+                    </div>
+                    <div class="rec-name" id="runNowName"></div>
+                    <div class="rec-progress"><i id="runBar"></i></div>
+                    <div class="rec-hint" id="runHint"></div>
+                </div>
+                <div class="rec-card best">
+                    <div class="rec-label">Run récord</div>
+                    <div class="rec-body">
+                        <div class="rec-num" id="runBestNum">0</div>
+                        <div class="rec-sprite" id="runBestImg"></div>
+                    </div>
+                    <div class="rec-name" id="runBestName"></div>
+                </div>
+            </aside>
+
+
+            <div class="content">
+                <nav>
+                    <button data-tab="battle" class="on">Combate</button>
+                    <button data-tab="gacha">Gacha</button>
+                    <button data-tab="mons">Pokémon</button>
+                    <button data-tab="shop">Tienda</button>
+                    <button data-tab="bag">Bolsa</button>
+                    <span class="spacer"></span>
+                    <button class="danger" id="resetBtn">Reiniciar partida</button>
+                </nav>
+
+                <section id="tab-battle" class="panel">
+                    <div class="panel-head head-row">
+                        <div>
+                            <h2>Combate salvaje</h2>
+                            <p class="note">Derrota a los Pokémon salvajes para ganar poder y tickets.</p>
+                        </div>
+                        <div class="zone-side">
+                            <button class="ghost" id="zoneBackBtn">Volver a Zona anterior</button>
+                            <div class="zone">
+                                <b id="zoneName">Zona 1</b>
+                                <span id="zoneStep">Combate 1/5</span>
+                                <div class="pips" id="zonePips"></div>
+                                <div class="znote" id="zoneNote"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="battleEmpty" class="hidden">
+                        <p class="note">Aún no tienes compañero. Consigue un Pokémon en el Gacha y elígelo en la pestaña
+                            Pokémon.</p>
+                    </div>
+                    <div id="battleBox">
+                        <div class="arena">
+                            <div class="mon" id="myBox"></div>
+                            <div class="vs">VS</div>
+                            <div class="mon" id="foeBox"></div>
+                        </div>
+                        <div class="log" id="log"></div>
+                        <div class="actions">
+                            <button id="attackBtn" class="big">Combatir</button>
+                            <button id="nextBtn" class="hidden big">Siguiente combate</button>
+                            <button id="retryBtn" class="hidden ghost big">Reintentar</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-gacha" class="panel hidden">
+                    <div class="panel-head">
+                        <h2>Gacha</h2>
+                        <p class="note">Cuanto más alto sea tu poder de entrenador, mejores Pokémon pueden
+                            salirte.</p>
+                    </div>
+                    <div class="row">
+                        <button id="pullBtn" class="big">Tirar (1 ticket)</button>
+                        <button id="buyBtn" class="ghost big">Comprar ticket (5 monedas)</button>
+                    </div>
+                    <div class="pull" id="pullResult"><span class="note">Gasta un ticket para conseguir un
+                            Pokémon.</span></div>
+                </section>
+
+                <section id="tab-mons" class="panel hidden">
+                    <div class="panel-head">
+                        <h2>Tus Pokémon</h2>
+                        <p class="note">Elige un compañero: será el que combata por ti.</p>
+                    </div>
+                    <div class="row">
+                        <input id="search" type="search" placeholder="Buscar por nombre" aria-label="Buscar por nombre">
+                        <select id="sort" aria-label="Ordenar">
+                            <option value="name">Ordenar por nombre</option>
+                            <option value="score">Ordenar por puntuación</option>
+                            <option value="atk">Ordenar por ataque</option>
+                            <option value="def">Ordenar por defensa</option>
+                            <option value="spd">Ordenar por velocidad</option>
+                            <option value="hp">Ordenar por vida</option>
+                        </select>
+                    </div>
+                    <div class="grid" id="monList"></div>
+                </section>
+                <section id="tab-shop" class="panel hidden">
+                    <div class="panel-head">
+                        <h2>Tienda</h2>
+                        <p class="note">Gasta tus monedas en objetos para mejorar a tu equipo.</p>
+                    </div>
+                    <div class="grid" id="shopList">
+                        <p class="empty">Aún no hay objetos disponibles. ¡Vuelve pronto!</p>
+                    </div>
+                </section>
+                <section id="tab-bag" class="panel hidden">
+                    <div class="panel-head">
+                        <h2>Bolsa</h2>
+                        <p class="note">Aquí se guardan los objetos que compras en la tienda.</p>
+                    </div>
+                    <div class="grid" id="bagList"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /* ================= DATOS (edita aquí para añadir Pokémon) ================= */
+        const IMG = id => `https://img.ptgigi.com/pkmn/home150/${id}.png`;
+
+        const POKEDEX = {
+            wishiwashi: {
+                name: 'Wishiwashi', img: IMG(1010), atk: 45, def: 45, spd: 40, hp: 250, score: 175,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            sunkern: {
+                name: 'Sunkern', img: IMG(262), atk: 60, def: 60, spd: 30, hp: 300, score: 180,
+                move: { name: 'Absorber', power: 40 }
+            },
+            blipbug: {
+                name: 'Blipbug', img: IMG(1123), atk: 45, def: 65, spd: 45, hp: 250, score: 180,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            snom: {
+                name: 'Snom', img: IMG(1196), atk: 70, def: 65, spd: 20, hp: 300, score: 185,
+                move: { name: 'Nieve Polvo', power: 40 }
+            },
+            azurill: {
+                name: 'Azurill', img: IMG(409), atk: 40, def: 80, spd: 20, hp: 500, score: 190,
+                move: { name: 'Atizar', power: 40 }
+            },
+            kricketot: {
+                name: 'Kricketot', img: IMG(536), atk: 50, def: 82, spd: 25, hp: 370, score: 194,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            kricketotboss: {
+                name: 'Kricketot Jefe', img: IMG(536), atk: 82, def: 50, spd: 25, hp: 370, score: 194,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            weedle: {
+                name: 'Weedle', img: IMG(21), atk: 55, def: 50, spd: 50, hp: 400, score: 195,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            wurmple: {
+                name: 'Wurmple', img: IMG(375), atk: 65, def: 65, spd: 20, hp: 450, score: 195,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            caterpie: {
+                name: 'Caterpie', img: IMG(17), atk: 50, def: 55, spd: 45, hp: 450, score: 195,
+                move: { name: 'Picadura', power: 40 }
+            },
+            ralts: {
+                name: 'Ralts', img: IMG(390), atk: 70, def: 60, spd: 40, hp: 280, score: 198,
+                move: { name: 'Confusion', power: 40 }
+            },
+            scatterbug: {
+                name: 'Scatterbug', img: IMG(867), atk: 62, def: 65, spd: 35, hp: 380, score: 200,
+                move: { name: 'Placaje', power: 40 }
+            },
+            cosmog: {
+                name: 'Cosmog', img: IMG(1079), atk: 58, def: 62, spd: 37, hp: 430, score: 200,
+                move: { name: 'Placaje', power: 40 }
+            },
+            magikarp: {
+                name: 'Magikarp', img: IMG(188), atk: 25, def: 75, spd: 80, hp: 200, score: 200,
+                move: { name: 'Placaje', power: 40 }
+            },
+            feebas: {
+                name: 'Feebas', img: IMG(468), atk: 25, def: 75, spd: 80, hp: 200, score: 200,
+                move: { name: 'Placaje', power: 40 }
+            },
+            silcoon: {
+                name: 'Silcoon', img: IMG(376), atk: 60, def: 80, spd: 15, hp: 500, score: 205,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            metapod: {
+                name: 'Metapod', img: IMG(18), atk: 45, def: 80, spd: 30, hp: 500, score: 205,
+                move: { name: 'Placaje', power: 40 }
+            },
+            pichu: {
+                name: 'Pichu', img: IMG(241), atk: 75, def: 50, spd: 60, hp: 200, score: 205,
+                move: { name: 'Impactrueno', power: 40 }
+            },
+            kakuna: {
+                name: 'Kakuna', img: IMG(22), atk: 50, def: 75, spd: 35, hp: 450, score: 205,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            cascoon: {
+                name: 'Cascoon', img: IMG(378), atk: 60, def: 80, spd: 15, hp: 500, score: 205,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            tyrogue: {
+                name: 'Tyrogue', img: IMG(340), atk: 70, def: 70, spd: 35, hp: 350, score: 210,
+                move: { name: 'Placaje', power: 40 }
+            },
+            nymble: {
+                name: 'Nymble', img: IMG(1343), atk: 67, def: 65, spd: 45, hp: 330, score: 210,
+                move: { name: 'Estoicismo', power: 40 }
+            },            
+            wooper: {
+                name: 'Wooper', img: IMG(265), atk: 70, def: 70, spd: 15, hp: 550, score: 210,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            wooperboss: {
+                name: 'Wooper Jefe', img: IMG(265), atk: 70, def: 70, spd: 15, hp: 550, score: 210,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            wooperpaldea: {
+                name: 'Wooper Paldea', img: IMG(1328), atk: 70, def: 70, spd: 15, hp: 550, score: 210,
+                move: { name: 'Cola Veneno', power: 40 }
+            },
+            tarountula: {
+                name: 'Tarountula', img: IMG(1341), atk: 70, def: 85, spd: 20, hp: 350, score: 210,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            bounsweet: {
+                name: 'Bounsweet', img: IMG(1026), atk: 60, def: 76, spd: 32, hp: 420, score: 210,
+                move: { name: 'Hoja Afilada', power: 40 }
+            },
+            igglybuff: {
+                name: 'Igglybuff', img: IMG(244), atk: 70, def: 35, spd: 15, hp: 900, score: 210,
+                move: { name: 'Voz Cautivadora', power: 40 }
+            },
+            spewpa: {
+                name: 'Spewpa', img: IMG(868), atk: 49, def: 90, spd: 29, hp: 450, score: 213,
+                move: { name: 'Acoso', power: 40 }
+            },
+            sentret: {
+                name: 'Sentret', img: IMG(230), atk: 81, def: 79, spd: 20, hp: 350, score: 215,
+                move: { name: 'Arañazo', power: 40 }
+            },
+            poochyena: {
+                name: 'Poochyena', img: IMG(369), atk: 85, def: 65, spd: 35, hp: 350, score: 220,
+                move: { name: 'Mordisco', power: 40 }
+            },
+            lotad: {
+                name: 'Lotad', img: IMG(380), atk: 70, def: 80, spd: 30, hp: 400, score: 220,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            seedot: {
+                name: 'Seedot', img: IMG(383), atk: 70, def: 80, spd: 30, hp: 400, score: 220,
+                move: { name: 'Absorber', power: 40 }
+            },
+            happiny: {
+                name: 'Happiny', img: IMG(583), atk: 20, def: 70, spd: 30, hp: 1000, score: 220,
+                move: { name: 'Destructor', power: 40 }
+            },
+            burmybasura: {
+                name: 'Burmy Basura', img: IMG(549), atk: 57, def: 89, spd: 36, hp: 400, score: 224,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            burmyarenoso: {
+                name: 'Burmy Arenoso', img: IMG(548), atk: 57, def: 89, spd: 36, hp: 400, score: 224,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            burmyplanta: {
+                name: 'Burmy Planta', img: IMG(547), atk: 57, def: 89, spd: 36, hp: 400, score: 224,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            wimpod: {
+                name: 'Wimpod', img: IMG(1032), atk: 55, def: 70, spd: 80, hp: 250, score: 230,
+                move: { name: 'Rodar', power: 40 }
+            },
+            wimpodboss: {
+                name: 'Wimpod Jefe', img: IMG(1032), atk: 55, def: 70, spd: 25, hp: 800, score: 230,
+                move: { name: 'Rodar', power: 40 }
+            },
+            shedinja: {
+                name: 'Shedinja', img: IMG(403), atk: 120, def: 75, spd: 40, hp: 10, score: 236,
+                move: { name: 'Garra Umbria', power: 40 }
+            },
+            bunnelby: {
+                name: 'Bunnelby', img: IMG(862), atk: 68, def: 74, spd: 57, hp: 380, score: 237,
+                move: { name: 'Placaje', power: 40 }
+            },
+            makuhita: {
+                name: 'Makuhita', img: IMG(407), atk: 80, def: 60, spd: 25, hp: 720, score: 237,
+                move: { name: 'Empujon', power: 40 }
+            },
+            zigzagoon: {
+                name: 'Zigzagoon', img: IMG(371), atk: 60, def: 82, spd: 60, hp: 380, score: 240,
+                move: { name: 'Placaje', power: 40 }
+            },
+            zigzagoongalar: {
+                name: 'Zigzagoon Galar', img: IMG(372), atk: 60, def: 82, spd: 60, hp: 380, score: 240,
+                move: { name: 'Alarido', power: 40 }
+            },
+            rolycoly: {
+                name: 'Rolycoly', img: IMG(1138), atk: 80, def: 100, spd: 30, hp: 300, score: 240,
+                move: { name: 'Antiaereo', power: 40 }
+            },
+            pawmi: {
+                name: 'Pawmi', img: IMG(1345), atk: 90, def: 55, spd: 60, hp: 450, score: 240,
+                move: { name: 'Impactrueno', power: 40 }
+            },
+            whismur: {
+                name: 'Whismur', img: IMG(404), atk: 102, def: 46, spd: 28, hp: 640, score: 240,
+                move: { name: 'Destructor', power: 40 }
+            },
+            toxel: {
+                name: 'Toxel', img: IMG(1155), atk: 92, def: 70, spd: 40, hp: 400, score: 242,
+                move: { name: 'Moflete Estatico', power: 40 }
+            },
+            combee: {
+                name: 'Combee', img: IMG(554), atk: 60, def: 84, spd: 70, hp: 300, score: 244,
+                move: { name: 'Picadura', power: 40 }
+            },
+            combeeboss: {
+                name: 'Combee Jefe', img: IMG(554), atk: 60, def: 84, spd: 30, hp: 700, score: 244,
+                move: { name: 'Picadura', power: 40 }
+            },
+            noibat: {
+                name: 'Noibat', img: IMG(967), atk: 75, def: 75, spd: 55, hp: 400, score: 245,
+                move: { name: 'Tornado', power: 40 }
+            },
+            rookidee: {
+                name: 'Rookidee', img: IMG(1119), atk: 80, def: 70, spd: 57, hp: 380, score: 245,
+                move: { name: 'Tornado', power: 40 }
+            },
+            wiglett: {
+                name: 'Wiglett', img: IMG(1388), atk: 90, def: 50, spd: 95, hp: 100, score: 245,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            nickit: {
+                name: 'Nickit', img: IMG(1127), atk: 75, def: 80, spd: 50, hp: 400, score: 245,
+                move: { name: 'Alarido', power: 40 }
+            },
+            zubat: {
+                name: 'Zubat', img: IMG(72), atk: 75, def: 75, spd: 55, hp: 400, score: 245,
+                move: { name: 'Colmillo Veneno', power: 40 }
+            },
+            starly: {
+                name: 'Starly', img: IMG(531), atk: 85, def: 60, spd: 60, hp: 400, score: 245,
+                move: { name: 'Picotazo', power: 40 }
+            },
+            togepi: {
+                name: 'Togepi', img: IMG(245), atk: 60, def: 130, spd: 20, hp: 350, score: 245,
+                move: { name: 'Viento Feerico', power: 40 }
+            },
+            hoppip: {
+                name: 'Hoppip', img: IMG(258), atk: 70, def: 95, spd: 50, hp: 350, score: 250,
+                move: { name: 'Absorber', power: 40 }
+            },
+            fomantis: {
+                name: 'Fomantis', img: IMG(1018), atk: 105, def: 70, spd: 35, hp: 400, score: 250,
+                move: { name: 'Follaje', power: 40 }
+            },
+            smeargle: {
+                name: 'Smeargle', img: IMG(339), atk: 40, def: 80, spd: 75, hp: 550, score: 250,
+                move: { name: 'Placaje', power: 40 }
+            },
+            gossifleur: {
+                name: 'Gossifleur', img: IMG(1129), atk: 80, def: 120, spd: 10, hp: 400, score: 250,
+                move: { name: 'Follaje', power: 40 }
+            },
+            bidoof: {
+                name: 'Bidoof', img: IMG(534), atk: 80, def: 80, spd: 31, hp: 590, score: 250,
+                move: { name: 'Placaje', power: 40 }
+            },
+            marill: {
+                name: 'Marill', img: IMG(254), atk: 40, def: 100, spd: 40, hp: 700, score: 250,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            spinarak: {
+                name: 'Spinarak', img: IMG(236), atk: 100, def: 80, spd: 30, hp: 400, score: 250,
+                move: { name: 'Acoso', power: 40 }
+            },
+            swinub: {
+                name: 'Swinub', img: IMG(322), atk: 80, def: 70, spd: 50, hp: 500, score: 250,
+                move: { name: 'Nieve Polvo', power: 40 }
+            },
+            slugma: {
+                name: 'Slugma', img: IMG(320), atk: 110, def: 80, spd: 20, hp: 400, score: 250,
+                move: { name: 'Ascuas', power: 40 }
+            },
+            pidgey: {
+                name: 'Pidgey', img: IMG(25), atk: 80, def: 75, spd: 56, hp: 400, score: 251,
+                move: { name: 'Tornado', power: 40 }
+            },
+            yungoos: {
+                name: 'Yungoos', img: IMG(992), atk: 100, def: 60, spd: 45, hp: 480, score: 253,
+                move: { name: 'Placaje', power: 40 }
+            },
+            rattataalola: {
+                name: 'Rattata Alola', img: IMG(30), atk: 81, def: 70, spd: 72, hp: 300, score: 253,
+                move: { name: 'Mordisco', power: 40 }
+            },
+            rattata: {
+                name: 'Rattata', img: IMG(29), atk: 81, def: 70, spd: 72, hp: 300, score: 253,
+                move: { name: 'Placaje', power: 40 }
+            },
+            lechonk: {
+                name: 'Lechonk', img: IMG(1338), atk: 80, def: 85, spd: 35, hp: 540, score: 254,
+                move: { name: 'Placaje', power: 40 }
+            },
+            lechonkboss: {
+                name: 'Lechonk Jefe', img: IMG(1338), atk: 85, def: 80, spd: 35, hp: 540, score: 254,
+                move: { name: 'Placaje', power: 40 }
+            },
+            flittle: {
+                name: 'Flittle', img: IMG(1383), atk: 90, def: 60, spd: 75, hp: 300, score: 255,
+                move: { name: 'Confusion', power: 40 }
+            },
+            charcadet: {
+                name: 'Charcadet', img: IMG(1363), atk: 100, def: 80, spd: 35, hp: 400, score: 255,
+                move: { name: 'Ascuas', power: 40 }
+            },
+            patrat: {
+                name: 'Patrat', img: IMG(676), atk: 90, def: 78, spd: 42, hp: 450, score: 255,
+                move: { name: 'Placaje', power: 40 }
+            },
+            applin: {
+                name: 'Applin', img: IMG(1142), atk: 80, def: 120, spd: 20, hp: 400, score: 260,
+                move: { name: 'Impresionar', power: 40 }
+            },
+            skitty: {
+                name: 'Skitty', img: IMG(411), atk: 80, def: 80, spd: 50, hp: 500, score: 260,
+                move: { name: 'Sorpresa', power: 40 }
+            },
+            venipede: {
+                name: 'Venipede', img: IMG(717), atk: 75, def: 98, spd: 57, hp: 300, score: 260,
+                move: { name: 'Acoso', power: 40 }
+            },
+            smoliv: {
+                name: 'Smoliv', img: IMG(1353), atk: 93, def: 96, spd: 30, hp: 410, score: 260,
+                move: { name: 'Absorber', power: 40 }
+            },
+            wynaut: {
+                name: 'Wynaut', img: IMG(484), atk: 46, def: 96, spd: 23, hp: 950, score: 260,
+                move: { name: 'Placaje', power: 40 }
+            },
+            hoothoot: {
+                name: 'Hoothoot', img: IMG(232), atk: 66, def: 86, spd: 50, hp: 600, score: 262,
+                move: { name: 'Picotazo', power: 40 }
+            },
+            spearow: {
+                name: 'Spearow', img: IMG(33), atk: 91, def: 61, spd: 70, hp: 400, score: 262,
+                move: { name: 'Picotazo', power: 40 }
+            },
+            shinx: {
+                name: 'Shinx', img: IMG(538), atk: 105, def: 68, spd: 45, hp: 450, score: 263,
+                move: { name: 'Impactrueno', power: 40 }
+            },
+            pidove: {
+                name: 'Pidove', img: IMG(691), atk: 91, def: 80, spd: 43, hp: 500, score: 264,
+                move: { name: 'Tornado', power: 40 }
+            },
+            pidoveboss: {
+                name: 'Pidove Jefe', img: IMG(691), atk: 80, def: 91, spd: 43, hp: 500, score: 264,
+                move: { name: 'Tornado', power: 40 }
+            },
+            diglett: {
+                name: 'Diglett', img: IMG(81), atk: 90, def: 70, spd: 95, hp: 100, score: 265,
+                move: { name: 'Terratemblor', power: 40 }
+            },
+            diglettalola: {
+                name: 'Diglett Alola', img: IMG(82), atk: 90, def: 70, spd: 95, hp: 100, score: 265,
+                move: { name: 'Garra Metal', power: 40 }
+            },
+            hatenna: {
+                name: 'Hatenna', img: IMG(1169), atk: 86, def: 98, spd: 39, hp: 420, score: 265,
+                move: { name: 'Confusion', power: 40 }
+            },
+            impidimp: {
+                name: 'Impidimp', img: IMG(1173), atk: 100, def: 70, spd: 50, hp: 450, score: 265,
+                move: { name: 'Mordisco', power: 40 }
+            },
+            pikipek: {
+                name: 'Pikipek', img: IMG(989), atk: 105, def: 60, spd: 65, hp: 350, score: 265,
+                move: { name: 'Picotazo', power: 40 }
+            },
+            ledyba: {
+                name: 'Ledyba', img: IMG(234), atk: 60, def: 110, spd: 55, hp: 400, score: 265,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            nincada: {
+                name: 'Nincada', img: IMG(401), atk: 75, def: 120, spd: 40, hp: 310, score: 266,
+                move: { name: 'Bofeton Lodo', power: 40 }
+            },
+            surskit: {
+                name: 'Surskit', img: IMG(394), atk: 80, def: 84, spd: 65, hp: 400, score: 269,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            dewpider: {
+                name: 'Dewpider', img: IMG(1016), atk: 80, def: 124, spd: 27, hp: 380, score: 269,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            taillow: {
+                name: 'Taillow', img: IMG(386), atk: 85, def: 60, spd: 85, hp: 400, score: 270,
+                move: { name: 'Picotazo', power: 40 }
+            },
+            rellor: {
+                name: 'Rellor', img: IMG(1381), atk: 81, def: 118, spd: 30, hp: 410, score: 270,
+                move: { name: 'Estoicismo', power: 40 }
+            },
+            wooloo: {
+                name: 'Wooloo', img: IMG(1131), atk: 80, def: 100, spd: 48, hp: 420, score: 270,
+                move: { name: 'Placaje', power: 40 }
+            },
+            wingull: {
+                name: 'Wingull', img: IMG(388), atk: 85, def: 60, spd: 85, hp: 400, score: 270,
+                move: { name: 'Pistola Agua', power: 40 }
+            },
+            milcery: {
+                name: 'Milcery', img: IMG(1183), atk: 90, def: 101, spd: 34, hp: 450, score: 270,
+                move: { name: 'Beso Drenaje', power: 40 }
+            },
+            yamper: {
+                name: 'Yamper', img: IMG(1136), atk: 85, def: 100, spd: 26, hp: 590, score: 270,
+                move: { name: 'Moflete Estatico', power: 40 }
+            },
+            jigglypuff: {
+                name: 'Jigglypuff', img: IMG(70), atk: 90, def: 45, spd: 20, hp: 1150, score: 270,
+                move: { name: 'Voz Cautivadora', power: 40 }
+            },
+            dreepy: {
+                name: 'Dreepy', img: IMG(1214), atk: 100, def: 60, spd: 82, hp: 280, score: 270,
+                move: { name: 'Impresionar', power: 40 }
+            },
+            tadbulb: {
+                name: 'Tadbulb', img: IMG(1366), atk: 90, def: 76, spd: 45, hp: 610, score: 272,
+                move: { name: 'Impactrueno', power: 40 }
+            },
+            tadbulbboss: {
+                name: 'Tadbulb Jefe', img: IMG(1366), atk: 90, def: 76, spd: 45, hp: 610, score: 272,
+                move: { name: 'Impactrueno', power: 40 }
+            },
+            nidoranm: {
+                name: 'Nidoran M', img: IMG(61), atk: 97, def: 80, spd: 50, hp: 460, score: 273,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+
+
+
+        };
+
+        // Pokémon disponibles en el gacha (id -> usa POKEDEX[id].score como puntuación)
+        const GACHA_POOL = ['wishiwashi', 'sunkern', 'blipbug', 'snom', 'azurill', 'kricketot', 'weedle', 'wurmple', 'caterpie', 'ralts',
+            'scatterbug', 'cosmog', 'magikarp', 'feebas', 'silcoon', 'metapod', 'pichu', 'kakuna', 'cascoon', 'tyrogue', 'nymble',
+            'wooperpaldea', 'wooper', 'tarountula', 'bounsweet', 'igglybuff', 'spewpa', 'sentret', 'poochyena', 'lotad', 'seedot', 'happiny', 'burmybasura',
+            'burmyarenoso', 'burmyplanta', 'wimpod', 'shedinja', 'bunnelby', 'makuhita', 'zigzagoon', 'zigzagoongalar', 'rolycoly', 'pawmi', 'whismur',
+            'toxel', 'combee', 'noibat', 'rookidee', 'wiglett', 'nickit', 'zubat', 'starly', 'togepi', 'hoppip', 'fomantis', 'smeargle', 'gossifleur',
+            'bidoof', 'marill', 'spinarak', 'swinub', 'slugma', 'pidgey', 'yungoos', 'rattataalola', 'rattata', 'lechonk', 'flittle', 'charcadet', 'patrat',
+            'applin', 'skitty', 'venipede', 'smoliv', 'wynaut', 'hoothoot', 'spearow', 'shinx', 'pidove', 'diglett', 'diglettalola', 'hatenna', 'impidimp',
+            'pikipek', 'ledyba', 'nincada', 'surskit', 'dewpider', 'taillow', 'rellor', 'wooloo', 'wingull', 'milcery', 'yamper', 'jigglypuff', 'dreepy',
+            'tadbulb', 'nidoranm'];
+
+        // Orden de salvajes (al terminar la lista, vuelve a empezar)
+        const WILD_ORDER = ['wishiwashi', 'sunkern', 'snom', 'azurill', 'kricketotboss', 'wurmple', 'ralts', 'scatterbug', 'silcoon', 'wooperboss',
+            'spewpa', 'sentret', 'poochyena', 'burmybasura', 'wimpodboss', 'shedinja', 'makuhita', 'rolycoly', 'toxel', 'combeeboss', 'nickit', 'gossifleur',
+            'pidgey', 'yungoos', 'lechonkboss', 'charcadet', 'applin', 'hoothoot', 'shinx', 'pidoveboss', 'impidimp', 'nincada', 'dewpider', 'yamper', 
+            'tadbulbboss', 'nidoranm'];
+
+        const START = { power: 180, coins: 0, tickets: 1 };  // 1 ticket inicial para poder obtener un primer Pokémon
+        const SAVE_KEY = 'pokegacha_save_v1';
+        const ZONE_SIZE = 5;   // combates por zona
+        const ITEM_PATH = 'IMG/';   // carpeta de imágenes, relativa al index.html
+        const SHOP_ITEMS = [
+            { id: 'acorazado', name: 'Núcleo Acorazado', desc: 'Ataque <-> Defensa', price: 15, img: ITEM_PATH + 'nucleoacorazado-removebg-preview.png' },
+            { id: 'cinetico', name: 'Núcleo Cinético', desc: 'Defensa <-> Velocidad', price: 15, img: ITEM_PATH + 'nucleocinetico-removebg-preview.png' },
+            { id: 'impulso', name: 'Núcleo Impulso', desc: 'Ataque <-> Velocidad', price: 15, img: ITEM_PATH + 'nucleoimpulso-removebg-preview.png' },
+            { id: 'vital', name: 'Núcleo Vital', desc: 'Ataque <-> Vida <br>(Ataque x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleovital-removebg-preview.png' },
+            { id: 'resistente', name: 'Núcleo Resistente', desc: 'Defensa <-> Vida <br>(Defensa x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleoresistente-removebg-preview.png' },
+            { id: 'adaptativo', name: 'Núcleo Adaptativo', desc: 'Velocidad <-> Vida <br>(Velocidad x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleoadaptativo-removebg-preview.png' },
+        ];
+
+        // swap: stats que se intercambian. scaled: el primero se multiplica x10 al pasar al segundo, y el segundo se divide /10 al pasar al primero
+        const ITEM_FX = {
+            acorazado: { swap: ['atk', 'def'] },
+            cinetico: { swap: ['def', 'spd'] },
+            impulso: { swap: ['atk', 'spd'] },
+            vital: { swap: ['atk', 'hp'], scaled: true },
+            resistente: { swap: ['def', 'hp'], scaled: true },
+            adaptativo: { swap: ['spd', 'hp'], scaled: true },
+        };
+
+        /* ================= ESTADO / GUARDADO ================= */
+        let save = null;
+        const $ = s => document.querySelector(s);
+        const load = () => { try { return JSON.parse(localStorage.getItem(SAVE_KEY)); } catch { return null; } };
+        const persist = () => localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+
+        function newGame(name) {
+            save = {
+                trainer: name, power: START.power, coins: START.coins, tickets: START.tickets,
+                owned: [], companion: null, wildIndex: 0, record: 0, recordName: null, upgrades: {}, items: {}, stats: {}, maxZone: 0
+            };
+            persist();
+        }
+
+        /* ================= INICIO ================= */
+        function showStart() {
+            $('#app').classList.add('hidden'); $('#start').classList.remove('hidden');
+            const s = load();
+            $('#continueBox').classList.toggle('hidden', !s);
+            $('#overwriteNote').classList.toggle('hidden', !s);
+            if (s) $('#continueText').textContent = `Entrenador ${s.trainer} · Poder ${s.power}`;
+        }
+        $('#continueBtn').onclick = () => {
+            save = load();
+            if (save.maxZone == null) save.maxZone = zoneOf(save.wildIndex || 0);
+            enterGame();
+        };
+        $('#newForm').onsubmit = e => {
+            e.preventDefault();
+            const name = $('#trainerName').value.trim();
+            if (!name) return;
+            newGame(name); enterGame();
+        };
+        function enterGame() {
+            $('#start').classList.add('hidden'); $('#app').classList.remove('hidden');
+            renderHeader(); showTab('battle'); startBattle();
+        }
+        $('#resetBtn').onclick = () => {
+            if (confirm('¿Reiniciar partida? Se borrará todo tu progreso.')) {
+                localStorage.removeItem(SAVE_KEY); save = null; showStart();
+            }
+        };
+
+        /* ================= CABECERA / PESTAÑAS ================= */
+        function renderHeader() {
+            $('#hName').textContent = save.trainer;
+            $('#hAvatar').textContent = save.trainer.charAt(0).toUpperCase();
+            $('#hPower').textContent = save.power;
+            $('#hCoins').textContent = save.coins;
+            $('#hTickets').textContent = save.tickets;
+            $('#pullBtn').disabled = save.tickets < 1;
+            $('#buyBtn').disabled = save.coins < 5;
+        }
+        document.querySelectorAll('nav [data-tab]').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+        function showTab(t) {
+            document.querySelectorAll('nav [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+            ['battle', 'gacha', 'mons', 'shop', 'bag'].forEach(x => $('#tab-' + x).classList.toggle('hidden', x !== t));
+            if (t === 'battle' && !battle?.busy && (!battle || battle.over || battle.myId !== save.companion)) startBattle();
+            if (t === 'gacha') renderHeader();
+            if (t === 'mons') renderMons();
+            if (t === 'shop') renderShop();
+            if (t === 'bag') { bagUse = null; bagResult = null; renderBag(); }
+        }
+
+        /* ================= COMBATE ================= */
+        let battle = null;
+        const damage = (move, atk, defTarget) => Math.max(1, Math.floor(move.power * atk / defTarget));
+        const UPGRADE_STEP = 5;        // potencia que sube cada mejora
+        const UPGRADE_BASE_COST = 10;  // coste de la primera mejora
+        const UPGRADE_COST_INC = 5;    // lo que sube el coste en cada mejora
+
+        const atkLevel = id => (save.upgrades && save.upgrades[id]) || 0;
+        const movePower = id => POKEDEX[id].move.power + atkLevel(id) * UPGRADE_STEP;
+        const upgradeCost = id => UPGRADE_BASE_COST + atkLevel(id) * UPGRADE_COST_INC;
+
+        // Stats reales de un Pokémon del jugador: base + cambios de núcleos
+        function statsOf(id) {
+            const o = save.stats && save.stats[id];
+            return o ? { ...POKEDEX[id], ...o } : POKEDEX[id];
+        }
+        const STAT_LABEL = { atk: 'ATK', def: 'DEF', spd: 'VEL', hp: 'PS' };
+        const statChip = (k, val, base) =>
+            `<span class="chip ${val !== base ? 'mod' : ''}">${STAT_LABEL[k]} <b>${val}</b></span>`;
+
+        const zoneOf = n => Math.floor(n / ZONE_SIZE);   // zona (empezando en 0) de un combate
+        const maxZone = () => save.maxZone || 0;         // checkpoint: zona más alta alcanzada
+
+        function renderZone() {
+            const n = save.wildIndex || 0, z = zoneOf(n), step = n % ZONE_SIZE + 1, cp = maxZone();
+            $('#zoneName').textContent = `Zona ${z + 1}`;
+            $('#zoneStep').textContent = `Combate ${step}/${ZONE_SIZE}`;
+            $('#zonePips').innerHTML = Array.from({ length: ZONE_SIZE }, (_, i) =>
+                `<i class="${i < step - 1 ? 'done' : i === step - 1 ? 'cur' : ''}"></i>`).join('');
+            $('#zoneBackBtn').disabled = z === 0;
+            const note = $('#zoneNote');
+            note.textContent = z < cp ? `Checkpoint: Zona ${cp + 1} · aquí no ganas poder` : `Checkpoint: Zona ${cp + 1}`;
+            note.classList.toggle('warn', z < cp);
+        }
+
+        function renderRun() {
+            const n = save.wildIndex || 0, r = save.record || 0;
+            const wild = k => POKEDEX[WILD_ORDER[(k - 1) % WILD_ORDER.length]];
+            const sprite = k => k ? `<img src="${wild(k).img}" alt="${wild(k).name}">` : '';
+
+            $('#runNowNum').textContent = n;
+            $('#runNowName').textContent = n ? wild(n).name : 'Sin victorias aún';
+            $('#runNowImg').innerHTML = sprite(n);
+
+            $('#runBestNum').textContent = r;
+            $('#runBestName').textContent = r ? wild(r).name : 'Sin récord aún';
+            $('#runBestImg').innerHTML = sprite(r);
+
+            $('#runBar').style.width = (r ? Math.min(100, n / r * 100) : 0) + '%';
+            const left = r - n + 1;
+            $('#runHint').textContent = !r ? 'Gana combates para fijar tu primer récord.'
+                : n > r ? '¡Estás superando tu récord!'
+                    : `${left} ${left === 1 ? 'victoria' : 'victorias'} para superar el récord`;
+            renderZone();
+        }
+
+        function startBattle() {
+            renderRun();
+            $('#log').innerHTML = '';
+            $('#nextBtn').classList.add('hidden'); $('#retryBtn').classList.add('hidden');
+            if (!save.companion) {
+                $('#battleEmpty').classList.remove('hidden'); $('#battleBox').classList.add('hidden'); battle = null; return;
+            }
+            $('#battleEmpty').classList.add('hidden'); $('#battleBox').classList.remove('hidden');
+            const wildId = WILD_ORDER[save.wildIndex % WILD_ORDER.length];
+            battle = {
+                myId: save.companion, foeId: wildId,
+                myHp: statsOf(save.companion).hp, foeHp: POKEDEX[wildId].hp, over: false, busy: false
+            };
+            $('#attackBtn').disabled = false;
+            renderBattle();
+            say(`¡Un ${POKEDEX[wildId].name} salvaje apareció!`);
+        }
+        function monCard(id, hp, who) {
+            const p = who === 'me' ? statsOf(id) : POKEDEX[id], pct = Math.max(0, hp / p.hp * 100);
+            const level = pct < 25 ? 'low' : pct < 50 ? 'mid' : '';
+            return `<div class="sprite"><img class="${hp <= 0 ? 'faint' : ''}" src="${p.img}" alt="${p.name}"></div>
+    <div class="info">
+      <div class="info-top"><span class="name">${p.name}</span><span class="tag ${who === 'foe' ? 'foe' : ''}">${who === 'me' ? 'Tú' : 'Salvaje'}</span></div>
+      <div class="bar"><i class="${level}" style="width:${pct}%"></i></div>
+      <div class="hp">${Math.max(0, hp)} / ${p.hp} PS</div>
+    </div>`;
+        }
+        function renderBattle() {
+            $('#myBox').innerHTML = monCard(battle.myId, battle.myHp, 'me');
+            $('#foeBox').innerHTML = monCard(battle.foeId, battle.foeHp, 'foe');
+        }
+        function say(t) { const p = document.createElement('p'); p.textContent = t; $('#log').prepend(p); }
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+
+        async function strike(side) {
+            const att = side === 'me' ? statsOf(battle.myId) : POKEDEX[battle.foeId];
+            const def = side === 'me' ? POKEDEX[battle.foeId] : statsOf(battle.myId);
+            const power = side === 'me' ? movePower(battle.myId) : att.move.power;  // solo tu Pokémon usa las mejoras
+            const dmg = damage({ power }, att.atk, def.def);
+            say(`${att.name} usa ${att.move.name} y causa ${dmg} de daño.`);
+            if (side === 'me') battle.foeHp -= dmg; else battle.myHp -= dmg;
+            renderBattle();
+            const target = side === 'me' ? $('#foeBox') : $('#myBox');
+            const cls = side === 'me' ? 'hit-foe' : 'hit-me';
+            target.classList.add(cls);
+            await wait(400);
+            target.classList.remove(cls);
+            await wait(250);
+        }
+
+        $('#attackBtn').onclick = async () => {
+            const b = battle;
+            if (!b || b.over || b.busy) return;
+            b.busy = true; $('#attackBtn').disabled = true;
+            const me = statsOf(b.myId), foe = POKEDEX[b.foeId];
+            // Ataca primero quien tenga más velocidad (en empate, el jugador)
+            const order = me.spd >= foe.spd ? ['me', 'foe'] : ['foe', 'me'];
+            // Simula turnos hasta que un Pokémon caiga
+            while (true) {
+                for (const side of order) {
+                    await strike(side);
+                    if (!save || battle !== b) return;   // partida reiniciada o combate sustituido: se detiene
+                    if (b.foeHp <= 0) return win();
+                    if (b.myHp <= 0) return lose();
+                }
+            }
+        };
+
+        function win() {
+            battle.over = true; battle.busy = false;
+            const cp = maxZone();
+            const earnsPower = zoneOf(save.wildIndex) >= cp;   // zonas por debajo del checkpoint no dan poder
+            save.tickets += 1;
+            if (earnsPower) save.power += 0.5;
+            save.wildIndex += 1;
+            save.maxZone = Math.max(cp, zoneOf(save.wildIndex));
+            persist(); renderHeader(); renderRun();
+            say(`¡${POKEDEX[battle.foeId].name} fue derrotado! ` + (earnsPower
+                ? '+0.5 poder de entrenador y +1 ticket.'
+                : '+1 ticket (zona inferior al checkpoint: sin poder de entrenador).'));
+            if (save.wildIndex % ZONE_SIZE === 0) {
+                say(`¡Zona ${save.wildIndex / ZONE_SIZE} superada! Avanzas a la Zona ${save.wildIndex / ZONE_SIZE + 1}.`);
+            }
+            $('#nextBtn').classList.remove('hidden');
+        }
+        function lose() {
+            battle.over = true; battle.busy = false;
+            const wins = save.wildIndex;
+            if (wins > (save.record || 0)) {
+                save.record = wins;
+                save.recordName = POKEDEX[WILD_ORDER[(wins - 1) % WILD_ORDER.length]].name;
+                say(`¡Nuevo récord: ${save.recordName} - ${wins}!`);
+            }
+            // Vuelves al inicio de la zona actual, no al primer salvaje
+            const checkpoint = Math.floor(wins / ZONE_SIZE) * ZONE_SIZE;
+            save.wildIndex = checkpoint; persist(); renderRun();
+            say(`${POKEDEX[battle.myId].name} no puede continuar... ` + (checkpoint === 0
+                ? 'Vuelves a empezar desde el primer Pokémon salvaje.'
+                : `Vuelves al inicio de la Zona ${checkpoint / ZONE_SIZE + 1}, contra ${POKEDEX[WILD_ORDER[checkpoint % WILD_ORDER.length]].name}.`));
+            $('#retryBtn').classList.remove('hidden');
+        }
+        $('#nextBtn').onclick = startBattle;
+        $('#retryBtn').onclick = startBattle;
+
+        $('#zoneBackBtn').onclick = () => {
+            if (battle?.busy) { alert('Espera a que termine el turno de combate.'); return; }
+            const z = zoneOf(save.wildIndex || 0);
+            if (z === 0) return;
+
+            // Antes de retroceder, se guarda como récord si era la mejor run
+            const wins = save.wildIndex;
+            if (wins > (save.record || 0)) {
+                save.record = wins;
+                save.recordName = POKEDEX[WILD_ORDER[(wins - 1) % WILD_ORDER.length]].name;
+            }
+
+            save.wildIndex = (z - 1) * ZONE_SIZE;   // inicio de la zona anterior; el checkpoint no cambia
+            persist(); startBattle();
+        };
+
+        /* ================= GACHA ================= */
+        $('#buyBtn').onclick = () => {
+            if (save.coins < 5) return;
+            save.coins -= 5; save.tickets += 1; persist(); renderHeader();
+        };
+        $('#pullBtn').onclick = () => {
+            if (save.tickets < 1) return;
+            const eligible = GACHA_POOL.filter(id => POKEDEX[id].score <= save.power);
+            if (!eligible.length) { $('#pullResult').innerHTML = '<span class="note">Aún no hay Pokémon disponibles para tu poder de entrenador.</span>'; return; }
+            save.tickets -= 1;
+            const id = eligible[Math.floor(Math.random() * eligible.length)];
+            const p = POKEDEX[id];
+            let msg;
+            if (save.owned.some(o => POKEDEX[o].name === p.name)) {
+                save.coins += 1; msg = `Ya tienes a ${p.name}. Recibes 1 moneda.`;
+            } else {
+                save.owned.push(id);
+                if (!save.companion) save.companion = id;
+                msg = `¡Nuevo Pokémon: ${p.name}!`;
+            }
+            persist(); renderHeader();
+            $('#pullResult').innerHTML = `<img src="${p.img}" alt="${p.name}"><b>${msg}</b>`;
+        };
+
+        /* ================= MIS POKÉMON ================= */
+        function renderMons() {
+            const q = $('#search').value.trim().toLowerCase(), sort = $('#sort').value;
+            const list = save.owned.map(id => ({ id, ...statsOf(id) }))
+                .filter(p => p.name.toLowerCase().includes(q))
+
+                .sort((a, b) => {
+                    if (sort === 'score') return b.score - a.score || a.name.localeCompare(b.name);
+                    if (sort === 'atk') return b.atk - a.atk;
+                    if (sort === 'def') return b.def - a.def;
+                    if (sort === 'spd') return b.spd - a.spd;
+                    if (sort === 'hp') return b.hp - a.hp;
+                    return a.name.localeCompare(b.name);
+                });
+
+            if (!save.owned.length) { $('#monList').innerHTML = '<p class="empty">Todavía no tienes Pokémon. Prueba suerte en el Gacha.</p>'; return; }
+            if (!list.length) { $('#monList').innerHTML = '<p class="empty">Ningún Pokémon coincide con la búsqueda.</p>'; return; }
+            $('#monList').innerHTML = list.map(p => `
+    <div class="card ${save.companion === p.id ? 'sel' : ''}">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="name">${p.name}</div>
+      <div class="chips">
+  ${statChip('atk', p.atk, POKEDEX[p.id].atk)}${statChip('def', p.def, POKEDEX[p.id].def)}
+  ${statChip('spd', p.spd, POKEDEX[p.id].spd)}${statChip('hp', p.hp, POKEDEX[p.id].hp)}
+</div>
+      <div class="move"><b>${p.move.name}</b> · Potencia <span class="${atkLevel(p.id) ? 'up' : ''}">${movePower(p.id)}</span></div>
+<button class="ghost upg" data-up="${p.id}" ${save.coins < upgradeCost(p.id) ? 'disabled' : ''}>
+  Mejorar Ataque
+  <small>Potencia ${movePower(p.id)} > ${movePower(p.id) + UPGRADE_STEP} | ${upgradeCost(p.id)} monedas</small>
+</button>
+<button data-pick="${p.id}" ${save.companion === p.id ? 'disabled' : ''}>${save.companion === p.id ? 'Compañero' : 'Elegir'}</button>
+    </div>`).join('');
+            document.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {
+                if (battle?.busy) { alert('Espera a que termine el turno de combate.'); return; }
+                if (save.companion === b.dataset.pick) return;
+
+                // Antes de reiniciar la run, se guarda como récord si era la mejor
+                const wins = save.wildIndex;
+                if (wins > (save.record || 0)) {
+                    save.record = wins;
+                    save.recordName = POKEDEX[WILD_ORDER[(wins - 1) % WILD_ORDER.length]].name;
+                }
+
+                save.companion = b.dataset.pick;
+                // Igual que al perder: vuelves al inicio de la zona actual, no al primer salvaje
+                save.wildIndex = Math.floor(wins / ZONE_SIZE) * ZONE_SIZE;
+                persist(); renderRun(); renderMons();
+            });
+            document.querySelectorAll('[data-up]').forEach(b => b.onclick = () => {
+                if (battle?.busy) { alert('Espera a que termine el turno de combate.'); return; }
+                const id = b.dataset.up, cost = upgradeCost(id);
+                if (save.coins < cost) return;
+                save.coins -= cost;
+                save.upgrades = save.upgrades || {};
+                save.upgrades[id] = atkLevel(id) + 1;
+                persist(); renderHeader(); renderMons();
+            });
+        }
+        $('#search').oninput = renderMons;
+        $('#sort').onchange = renderMons;
+
+        /* ================= TIENDA ================= */
+        const itemCount = id => (save.items && save.items[id]) || 0;
+
+        function renderShop() {
+            $('#shopList').innerHTML = SHOP_ITEMS.map(it => `
+    <div class="card">
+      <img src="${it.img}" alt="${it.name}" onerror="this.style.visibility='hidden'">
+      <div class="name">${it.name}</div>
+      <div class="desc">${it.desc}</div>      
+      <div class="move">Tienes: <b>${itemCount(it.id)}</b></div>
+      <button data-buy="${it.id}" ${save.coins < it.price ? 'disabled' : ''}>Comprar · ${it.price} monedas</button>
+    </div>`).join('');
+            document.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
+                const it = SHOP_ITEMS.find(x => x.id === b.dataset.buy);
+                if (!it || save.coins < it.price) return;
+                save.coins -= it.price;
+                save.items = save.items || {};
+                save.items[it.id] = itemCount(it.id) + 1;
+                persist(); renderHeader(); renderShop();
+            });
+        }
+
+        /* ================= BOLSA ================= */
+
+        let bagUse = null, bagResult = null;   // objeto elegido / último resultado
+
+        const applyFx = (s, fx) => {
+            const [a, b] = fx.swap, n = { atk: s.atk, def: s.def, spd: s.spd, hp: s.hp };
+            if (fx.scaled) { n[a] = Math.max(1, Math.round(s[b] / 10)); n[b] = s[a] * 10; }
+            else { n[a] = s[b]; n[b] = s[a]; }
+            return n;
+        };
+        const pick4 = s => ({ atk: s.atk, def: s.def, spd: s.spd, hp: s.hp });
+        const changeChips = (before, after) => ['atk', 'def', 'spd', 'hp'].map(k =>
+            before[k] === after[k]
+                ? `<span class="chip">${STAT_LABEL[k]} <b>${after[k]}</b></span>`
+                : `<span class="chip mod">${STAT_LABEL[k]} <b><span class="from">${before[k]}</span> → ${after[k]}</b></span>`
+        ).join('');
+
+        function renderBag() {
+            const box = $('#bagList');
+
+            // 3) Resultado visual tras aplicar el objeto
+            if (bagResult) {
+                const it = SHOP_ITEMS.find(x => x.id === bagResult.item), p = POKEDEX[bagResult.mon];
+                box.innerHTML = `
+    <div class="card result-card">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="name">${p.name}</div>
+      <div class="desc">¡${it.name} aplicado!</div>
+      <div class="chips">${changeChips(bagResult.before, bagResult.after)}</div>
+      <div class="row">
+        ${itemCount(it.id) > 0 ? `<button class="ghost" data-again="${it.id}">Usar otro (${itemCount(it.id)})</button>` : ''}
+        <button data-back>Volver a la bolsa</button>
+      </div>
+    </div>`;
+                box.querySelector('[data-back]').onclick = () => { bagResult = null; renderBag(); };
+                const again = box.querySelector('[data-again]');
+                if (again) again.onclick = () => { bagUse = again.dataset.again; bagResult = null; renderBag(); };
+                return;
+            }
+
+            // 2) Elegir a qué Pokémon aplicarlo
+            if (bagUse) {
+                const it = SHOP_ITEMS.find(x => x.id === bagUse), fx = ITEM_FX[bagUse];
+                const head = `<div class="bag-title"><div><h2>${it.name}</h2><p class="note">Elige el Pokémon al que aplicarlo (${itemCount(it.id)} disponibles).</p></div>
+          <button class="ghost" data-back>Cancelar</button></div>`;
+                if (!save.owned.length) {
+                    box.innerHTML = head + '<p class="empty">Aún no tienes Pokémon.</p>';
+                } else {
+                    box.innerHTML = head + save.owned.map(id => {
+                        const p = POKEDEX[id], now = pick4(statsOf(id)), next = applyFx(now, fx);
+                        const same = ['atk', 'def', 'spd', 'hp'].every(k => now[k] === next[k]);
+                        return `<div class="card">
+          <img src="${p.img}" alt="${p.name}">
+          <div class="name">${p.name}</div>
+          <div class="chips">${changeChips(now, next)}</div>
+          <button data-apply="${id}" ${same ? 'disabled' : ''}>${same ? 'Sin cambios' : 'Aplicar'}</button>
+        </div>`;
+                    }).join('');
+                }
+                box.querySelector('[data-back]').onclick = () => { bagUse = null; renderBag(); };
+                box.querySelectorAll('[data-apply]').forEach(b => b.onclick = () => applyItem(b.dataset.apply));
+                return;
+            }
+
+            // 1) Lista de objetos
+            const owned = SHOP_ITEMS.filter(it => itemCount(it.id) > 0);
+            if (!owned.length) {
+                box.innerHTML = '<p class="empty">La bolsa está vacía. Visita la tienda para conseguir objetos.</p>';
+                return;
+            }
+            box.innerHTML = owned.map(it => `
+    <div class="card">
+      <img src="${it.img}" alt="${it.name}" onerror="this.style.visibility='hidden'">
+      <div class="name">${it.name}</div>
+      <div class="desc">${it.desc}</div>
+      <div class="move">Cantidad: <b>${itemCount(it.id)}</b></div>
+      <button data-use="${it.id}">Usar</button>
+    </div>`).join('');
+            box.querySelectorAll('[data-use]').forEach(b => b.onclick = () => { bagUse = b.dataset.use; renderBag(); });
+        }
+
+        function applyItem(monId) {
+            if (battle?.busy) { alert('Espera a que termine el turno de combate.'); return; }
+            const fx = ITEM_FX[bagUse];
+            if (!fx || itemCount(bagUse) < 1) return;
+            const before = pick4(statsOf(monId)), after = applyFx(before, fx);
+            if (['atk', 'def', 'spd', 'hp'].every(k => before[k] === after[k])) return;
+
+            save.items[bagUse] = itemCount(bagUse) - 1;
+            save.stats = save.stats || {};
+            save.stats[monId] = after;
+            if (monId === save.companion) battle = null;   // el combate se reinicia con las stats nuevas
+            persist();
+            bagResult = { item: bagUse, mon: monId, before, after };
+            bagUse = null;
+            renderBag();
+        }
+
+        /* ================= ARRANQUE ================= */
+        showStart();
+    </script>
+</body>
+
+</html>
