@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pokégacha</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
@@ -1581,6 +1582,34 @@
                 name: 'Nidoran M', img: IMG(61), atk: 97, def: 80, spd: 50, hp: 460, score: 273,
                 move: { name: 'Picotazo Veneno', power: 40 }
             },
+            skwovet: {
+                name: 'Skwovet', img: IMG(1117), atk: 90, def: 90, spd: 25, hp: 700, score: 275,
+                move: { name: 'Placaje', power: 40 }
+            },
+            tynamo: {
+                name: 'Tynamo', img: IMG(791), atk: 100, def: 80, spd: 60, hp: 350, score: 275,
+                move: { name: 'Chispa', power: 40 }
+            },
+            cherubi: {
+                name: 'Cherubi', img: IMG(559), atk: 97, def: 98, spd: 35, hp: 450, score: 275,
+                move: { name: 'Absorber', power: 40 }
+            },
+            nidoranf: {
+                name: 'Nidoran F', img: IMG(58), atk: 87, def: 92, spd: 41, hp: 550, score: 275,
+                move: { name: 'Picotazo Veneno', power: 40 }
+            },
+            bramblin: {
+                name: 'Bramblin', img: IMG(1374), atk: 110, def: 65, spd: 60, hp: 400, score: 275,
+                move: { name: 'Absorber', power: 40 }
+            },
+            lillipup: {
+                name: 'Lillipup', img: IMG(678), atk: 85, def: 90, spd: 55, hp: 450, score: 275,
+                move: { name: 'Placaje', power: 40 }
+            },
+            litwick: {
+                name: 'Litwick', img: IMG(796), atk: 95, def: 110, spd: 20, hp: 500, score: 275,
+                move: { name: 'Bola Sombra', power: 40 }
+            },
 
 
 
@@ -1595,13 +1624,13 @@
             'bidoof', 'marill', 'spinarak', 'swinub', 'slugma', 'pidgey', 'yungoos', 'rattataalola', 'rattata', 'lechonk', 'flittle', 'charcadet', 'patrat',
             'applin', 'skitty', 'venipede', 'smoliv', 'wynaut', 'hoothoot', 'spearow', 'shinx', 'pidove', 'diglett', 'diglettalola', 'hatenna', 'impidimp',
             'pikipek', 'ledyba', 'nincada', 'surskit', 'dewpider', 'taillow', 'rellor', 'wooloo', 'wingull', 'milcery', 'yamper', 'jigglypuff', 'dreepy',
-            'tadbulb', 'nidoranm'];
+            'tadbulb', 'nidoranm', 'skwovet', 'tynamo', 'cherubi', 'nidoranf', 'bramblin', 'lillipup', 'litwick'];
 
         // Orden de salvajes (al terminar la lista, vuelve a empezar)
         const WILD_ORDER = ['wishiwashi', 'sunkern', 'snom', 'azurill', 'kricketotboss', 'wurmple', 'ralts', 'scatterbug', 'silcoon', 'wooperboss',
             'spewpa', 'sentret', 'poochyena', 'burmybasura', 'wimpodboss', 'shedinja', 'makuhita', 'rolycoly', 'toxel', 'combeeboss', 'nickit', 'gossifleur',
             'pidgey', 'yungoos', 'lechonkboss', 'charcadet', 'applin', 'hoothoot', 'shinx', 'pidoveboss', 'impidimp', 'nincada', 'dewpider', 'yamper', 
-            'tadbulbboss', 'nidoranm'];
+            'tadbulbboss', 'nidoranm', 'litwick'];
 
         const START = { power: 180, coins: 0, tickets: 1 };  // 1 ticket inicial para poder obtener un primer Pokémon
         const SAVE_KEY = 'pokegacha_save_v1';
