@@ -7,7 +7,7 @@
     <title>Pokégacha</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
@@ -370,65 +370,42 @@
 
         .rec-card.best .rec-label {
             color: var(--gold)
-        }
+        }       
 
-        .rec-body {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
+        .zone-big {
+            font: 700 38px/1.1 var(--display);
+            color: var(--gold);
             margin: 6px 0 2px
         }
 
-        .rec-num {
-            font: 700 60px/1 var(--display);
-            font-variant-numeric: tabular-nums
-        }
-
-        .rec-card.now .rec-num {
-            color: var(--accent)
-        }
-
-        .rec-card.best .rec-num {
-            color: var(--gold)
-        }
-
-        .rec-sprite {
-            width: 84px;
-            height: 84px;
-            flex-shrink: 0
-        }
-
-        .rec-sprite img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain
-        }
-
-        .rec-name {
-            font: 600 15px var(--display)
-        }
-
-        .rec-progress {
-            height: 8px;
-            background: #0b1118;
-            border-radius: 99px;
-            overflow: hidden;
-            margin: 14px 0 8px
-        }
-
-        .rec-progress i {
-            display: block;
-            height: 100%;
-            width: 0;
-            border-radius: 99px;
-            background: linear-gradient(90deg, #34d399, var(--accent));
-            transition: width .4s ease
-        }
-
-        .rec-hint {
-            font-size: 12.5px;
+        .zone-step {
+            font-size: 14px;
             color: var(--muted)
+        }
+
+        .records .pips {
+            justify-content: flex-start;
+            margin-top: 12px
+        }
+
+        .records .pips i {
+            flex: 1;
+            height: 8px
+        }
+
+        .records .znote {
+            margin-top: 10px;
+            font-size: 12.5px
+        }
+
+        .records .rec-card button {
+            width: 100%
+        }
+
+        @media (max-width: 560px) {
+            .zone-big {
+                font-size: 26px
+            }
         }
 
         @media (max-width: 860px) {
@@ -447,59 +424,8 @@
             .rec-card {
                 padding: 14px
             }
-
-            .rec-num {
-                font-size: 40px
-            }
-
-            .rec-sprite {
-                width: 56px;
-                height: 56px
-            }
-
-            .rec-name {
-                font-size: 13px
-            }
         }
-
-        .head-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            flex-wrap: wrap
-        }
-
-        .zone {
-            text-align: right;
-            background: var(--bg2);
-            border: 1px solid rgba(251, 191, 36, .35);
-            border-radius: 12px;
-            padding: 8px 14px
-        }
-
-        .zone b {
-            display: block;
-            font: 700 16px var(--display);
-            color: var(--gold)
-        }
-
-        .zone span {
-            font-size: 12px;
-            color: var(--muted)
-        }
-
-        .zone-side {
-            display: flex;
-            gap: 10px;
-            align-items: stretch;
-            flex-wrap: wrap
-        }
-
-        .zone-side>button {
-            padding: 8px 14px;
-            font-size: 13px
-        }
+        
 
         .znote {
             font-size: 11.5px;
@@ -708,23 +634,147 @@
         }
 
         .log {
-            height: 110px;
-            overflow-y: auto;
-            margin: 16px 0;
-            padding: 12px 14px;
+            min-height: 70px;
+            margin: 10px 0;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: var(--bg2);
             border: 1px solid var(--line);
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 14px
         }
 
         .log p {
-            margin: 3px 0;
+            margin: 0;
+            width: 100%;
+            padding: 22px 18px;
+            border-radius: 12px;
+            border-left: 5px solid var(--line);
+            background: var(--panel);
+            color: var(--text);
+            text-align: center;
+            font: 600 22px/1.35 var(--display);
+            animation: logIn .35s ease both
+        }
+
+        .log p b.dmg {
+            color: var(--gold);
+            font-size: 1.3em
+        }
+
+        .log p.appear {
+            border-left-color: var(--blue)
+        }
+
+        .log p.by-me {
+            border-left-color: var(--accent)
+        }
+
+        .log p.by-foe {
+            border-left-color: var(--warn)
+        }
+
+        .log p.win {
+            border-left-color: var(--gold);
+            font-size: 26px
+        }
+
+        .log p.record {
+            border-left-color: var(--gold);
+            color: var(--gold)
+        }
+
+        .log p.lose {
+            border-left-color: var(--warn)
+        }
+
+        .log .reward {
+            width: 100%
+        }
+
+        .reward-zone {
+            margin-top: 12px;
+            text-align: center;
+            font: 700 16px var(--display);
+            color: var(--gold)
+        }
+
+        /* Tarjeta de recompensas */
+        .reward {
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(251, 191, 36, .35);
+            background: radial-gradient(ellipse at 50% 0%, rgba(251, 191, 36, .16), transparent 70%), var(--panel);
+            animation: logIn .4s ease both
+        }
+
+        .reward.boss {
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px -12px rgba(251, 191, 36, .45)
+        }
+
+        .reward-title {
+            font: 700 18px var(--display);
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px
+        }
+
+        .reward-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px
+        }
+
+        .rw {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2px;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: var(--bg2);
+            border: 1px solid var(--c, var(--line));
+            animation: pop .5s cubic-bezier(.2, 1.4, .4, 1) both;
+            animation-delay: var(--d, 0s)
+        }
+
+        .rw b {
+            font: 700 26px/1.1 var(--display);
+            color: var(--c, var(--text))
+        }
+
+        .rw span {
+            font-size: 12.5px;
             color: var(--muted)
         }
 
-        .log p:first-child {
-            color: var(--text)
+        .rw img {
+            width: 64px;
+            height: 64px
+        }
+
+        .rw.item b {
+            font-size: 15px
+        }
+
+        .rw.none {
+            opacity: .7;
+            border-style: dashed
+        }
+
+        @keyframes logIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
         }
 
         .actions {
@@ -982,6 +1032,22 @@
             margin: 0
         }
 
+        .bag-tools {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .bag-tools input {
+            flex: 1;
+            min-width: 180px
+        }
+
+        .contents {
+            display: contents
+        }
+
         .result-card {
             grid-column: 1 / -1;
             max-width: 380px;
@@ -1039,22 +1105,17 @@
         <div class="layout">
             <aside class="records">
                 <div class="rec-card now">
-                    <div class="rec-label">Run actual</div>
-                    <div class="rec-body">
-                        <div class="rec-num" id="runNowNum">0</div>
-                        <div class="rec-sprite" id="runNowImg"></div>
-                    </div>
-                    <div class="rec-name" id="runNowName"></div>
-                    <div class="rec-progress"><i id="runBar"></i></div>
-                    <div class="rec-hint" id="runHint"></div>
+                    <div class="rec-label">Zona actual</div>
+                    <div class="zone-big" id="zoneName">Zona 1</div>
+                    <div class="zone-step" id="zoneStep">Combate 1/5</div>
+                    <div class="pips" id="zonePips"></div>
+                    <div class="znote" id="zoneNote"></div>
                 </div>
                 <div class="rec-card best">
-                    <div class="rec-label">Run récord</div>
-                    <div class="rec-body">
-                        <div class="rec-num" id="runBestNum">0</div>
-                        <div class="rec-sprite" id="runBestImg"></div>
-                    </div>
-                    <div class="rec-name" id="runBestName"></div>
+                    <div class="rec-label">Zonas</div>
+                    <p class="note" style="margin:6px 0 12px">Vuelve al inicio de la zona anterior. Tu checkpoint no
+                        cambia.</p>
+                    <button id="zoneBackBtn" class="ghost">Volver a Zona anterior</button>
                 </div>
             </aside>
 
@@ -1071,21 +1132,6 @@
                 </nav>
 
                 <section id="tab-battle" class="panel">
-                    <div class="panel-head head-row">
-                        <div>
-                            <h2>Combate salvaje</h2>
-                            <p class="note">Derrota a los Pokémon salvajes para ganar poder y tickets.</p>
-                        </div>
-                        <div class="zone-side">
-                            <button class="ghost" id="zoneBackBtn">Volver a Zona anterior</button>
-                            <div class="zone">
-                                <b id="zoneName">Zona 1</b>
-                                <span id="zoneStep">Combate 1/5</span>
-                                <div class="pips" id="zonePips"></div>
-                                <div class="znote" id="zoneNote"></div>
-                            </div>
-                        </div>
-                    </div>
                     <div id="battleEmpty" class="hidden">
                         <p class="note">Aún no tienes compañero. Consigue un Pokémon en el Gacha y elígelo en la pestaña
                             Pokémon.</p>
@@ -1249,7 +1295,7 @@
             nymble: {
                 name: 'Nymble', img: IMG(1343), atk: 67, def: 65, spd: 45, hp: 330, score: 210,
                 move: { name: 'Estoicismo', power: 40 }
-            },            
+            },
             wooper: {
                 name: 'Wooper', img: IMG(265), atk: 70, def: 70, spd: 15, hp: 550, score: 210,
                 move: { name: 'Pistola Agua', power: 40 }
@@ -1629,7 +1675,7 @@
         // Orden de salvajes (al terminar la lista, vuelve a empezar)
         const WILD_ORDER = ['wishiwashi', 'sunkern', 'snom', 'azurill', 'kricketotboss', 'wurmple', 'ralts', 'scatterbug', 'silcoon', 'wooperboss',
             'spewpa', 'sentret', 'poochyena', 'burmybasura', 'wimpodboss', 'shedinja', 'makuhita', 'rolycoly', 'toxel', 'combeeboss', 'nickit', 'gossifleur',
-            'pidgey', 'yungoos', 'lechonkboss', 'charcadet', 'applin', 'hoothoot', 'shinx', 'pidoveboss', 'impidimp', 'nincada', 'dewpider', 'yamper', 
+            'pidgey', 'yungoos', 'lechonkboss', 'charcadet', 'applin', 'hoothoot', 'shinx', 'pidoveboss', 'impidimp', 'nincada', 'dewpider', 'yamper',
             'tadbulbboss', 'nidoranm', 'litwick'];
 
         const START = { power: 180, coins: 0, tickets: 1 };  // 1 ticket inicial para poder obtener un primer Pokémon
@@ -1637,12 +1683,19 @@
         const ZONE_SIZE = 5;   // combates por zona
         const ITEM_PATH = 'IMG/';   // carpeta de imágenes, relativa al index.html
         const SHOP_ITEMS = [
-            { id: 'acorazado', name: 'Núcleo Acorazado', desc: 'Ataque <-> Defensa', price: 15, img: ITEM_PATH + 'nucleoacorazado-removebg-preview.png' },
-            { id: 'cinetico', name: 'Núcleo Cinético', desc: 'Defensa <-> Velocidad', price: 15, img: ITEM_PATH + 'nucleocinetico-removebg-preview.png' },
-            { id: 'impulso', name: 'Núcleo Impulso', desc: 'Ataque <-> Velocidad', price: 15, img: ITEM_PATH + 'nucleoimpulso-removebg-preview.png' },
-            { id: 'vital', name: 'Núcleo Vital', desc: 'Ataque <-> Vida <br>(Ataque x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleovital-removebg-preview.png' },
-            { id: 'resistente', name: 'Núcleo Resistente', desc: 'Defensa <-> Vida <br>(Defensa x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleoresistente-removebg-preview.png' },
-            { id: 'adaptativo', name: 'Núcleo Adaptativo', desc: 'Velocidad <-> Vida <br>(Velocidad x 10 | Vida / 10)', price: 15, img: ITEM_PATH + 'nucleoadaptativo-removebg-preview.png' },
+            { id: 'acorazado', name: 'Núcleo Acorazado', desc: 'Ataque <-> Defensa', price: 10, img: ITEM_PATH + 'nucleoacorazado.png' },
+            { id: 'cinetico', name: 'Núcleo Cinético', desc: 'Defensa <-> Velocidad', price: 10, img: ITEM_PATH + 'nucleocinetico.png' },
+            { id: 'impulso', name: 'Núcleo Impulso', desc: 'Ataque <-> Velocidad', price: 10, img: ITEM_PATH + 'nucleoimpulso.png' },
+            { id: 'vital', name: 'Núcleo Vital', desc: 'Ataque <-> Vida <br>(Ataque x 10 | Vida / 10)', price: 10, img: ITEM_PATH + 'nucleovital.png' },
+            { id: 'resistente', name: 'Núcleo Resistente', desc: 'Defensa <-> Vida <br>(Defensa x 10 | Vida / 10)', price: 10, img: ITEM_PATH + 'nucleoresistente.png' },
+            { id: 'adaptativo', name: 'Núcleo Adaptativo', desc: 'Velocidad <-> Vida <br>(Velocidad x 10 | Vida / 10)', price: 10, img: ITEM_PATH + 'nucleoadaptativo.png' },
+            { id: 'potenciadorataque', name: 'Potenciador Ataque', desc: 'Ataque +5 | Defensa -5', price: 15, img: ITEM_PATH + 'potenciadorataque.png' },
+            { id: 'potenciadordefensa', name: 'Potenciador Defensa', desc: 'Ataque -5 | Defensa +5', price: 15, img: ITEM_PATH + 'potenciadordefensa.png' },
+            { id: 'potenciadorvelocidad', name: 'Potenciador Velocidad', desc: 'Ataque -5 | Defensa -5 <br> Velocidad +10', price: 15, img: ITEM_PATH + 'potenciadorvelocidad.png' },
+            { id: 'potenciadorvida', name: 'Potenciador Vida', desc: 'Ataque -5 | Defensa -5 <br> Velocidad -5 | Vida +150', price: 15, img: ITEM_PATH + 'potenciadorvida.png' },
+            { id: 'potenciadortotal', name: 'Potenciador Total', desc: 'Ataque +5 | Defensa +5 <br> Velocidad +5 | Vida -150', price: 15, img: ITEM_PATH + 'potenciadortotal.png' },
+            { id: 'bayaofensiva', name: 'Baya Ofensiva', desc: 'Ataque +5', price: 30, img: ITEM_PATH + 'bayaofensiva.png' },
+            { id: 'bayadefensiva', name: 'Baya Defensiva', desc: 'Defensa +5', price: 30, img: ITEM_PATH + 'bayadefensiva.png' },
         ];
 
         // swap: stats que se intercambian. scaled: el primero se multiplica x10 al pasar al segundo, y el segundo se divide /10 al pasar al primero
@@ -1653,6 +1706,13 @@
             vital: { swap: ['atk', 'hp'], scaled: true },
             resistente: { swap: ['def', 'hp'], scaled: true },
             adaptativo: { swap: ['spd', 'hp'], scaled: true },
+            potenciadorataque: { add: { atk: 5, def: -5 } },
+            potenciadordefensa: { add: { atk: -5, def: 5 } },
+            potenciadorvelocidad: { add: { atk: -5, def: -5, spd: +10 } },
+            potenciadorvida: { add: { atk: -5, def: -5, spd: -5, hp: +150 } },
+            potenciadortotal: { add: { atk: +5, def: +5, spd: +5, hp: -150 } },
+            bayaofensiva: { add: { atk: +5} },
+            bayadefensiva: { add: { def: +5} },
         };
 
         /* ================= ESTADO / GUARDADO ================= */
@@ -1716,7 +1776,7 @@
             if (t === 'gacha') renderHeader();
             if (t === 'mons') renderMons();
             if (t === 'shop') renderShop();
-            if (t === 'bag') { bagUse = null; bagResult = null; renderBag(); }
+            if (t === 'bag') { bagUse = null; bagResult = null; bagQ = ''; bagSort = 'name'; renderBag(); }
         }
 
         /* ================= COMBATE ================= */
@@ -1755,23 +1815,6 @@
         }
 
         function renderRun() {
-            const n = save.wildIndex || 0, r = save.record || 0;
-            const wild = k => POKEDEX[WILD_ORDER[(k - 1) % WILD_ORDER.length]];
-            const sprite = k => k ? `<img src="${wild(k).img}" alt="${wild(k).name}">` : '';
-
-            $('#runNowNum').textContent = n;
-            $('#runNowName').textContent = n ? wild(n).name : 'Sin victorias aún';
-            $('#runNowImg').innerHTML = sprite(n);
-
-            $('#runBestNum').textContent = r;
-            $('#runBestName').textContent = r ? wild(r).name : 'Sin récord aún';
-            $('#runBestImg').innerHTML = sprite(r);
-
-            $('#runBar').style.width = (r ? Math.min(100, n / r * 100) : 0) + '%';
-            const left = r - n + 1;
-            $('#runHint').textContent = !r ? 'Gana combates para fijar tu primer récord.'
-                : n > r ? '¡Estás superando tu récord!'
-                    : `${left} ${left === 1 ? 'victoria' : 'victorias'} para superar el récord`;
             renderZone();
         }
 
@@ -1790,7 +1833,7 @@
             };
             $('#attackBtn').disabled = false;
             renderBattle();
-            say(`¡Un ${POKEDEX[wildId].name} salvaje apareció!`);
+            say(`¡Un <b>${POKEDEX[wildId].name}</b> salvaje apareció!`, 'appear');
         }
         function monCard(id, hp, who) {
             const p = who === 'me' ? statsOf(id) : POKEDEX[id], pct = Math.max(0, hp / p.hp * 100);
@@ -1806,7 +1849,14 @@
             $('#myBox').innerHTML = monCard(battle.myId, battle.myHp, 'me');
             $('#foeBox').innerHTML = monCard(battle.foeId, battle.foeHp, 'foe');
         }
-        function say(t) { const p = document.createElement('p'); p.textContent = t; $('#log').prepend(p); }
+        function say(t, cls = '') {
+            const log = $('#log');
+            log.innerHTML = '';                 // un solo mensaje cada vez
+            const p = document.createElement('p');
+            if (cls) p.className = cls;
+            p.innerHTML = t;
+            log.appendChild(p);
+        }
         const wait = ms => new Promise(r => setTimeout(r, ms));
 
         async function strike(side) {
@@ -1814,7 +1864,7 @@
             const def = side === 'me' ? POKEDEX[battle.foeId] : statsOf(battle.myId);
             const power = side === 'me' ? movePower(battle.myId) : att.move.power;  // solo tu Pokémon usa las mejoras
             const dmg = damage({ power }, att.atk, def.def);
-            say(`${att.name} usa ${att.move.name} y causa ${dmg} de daño.`);
+            say(`${att.name} usa <b>${att.move.name}</b> y causa <b class="dmg">${dmg}</b> de daño.`, 'by-' + side);
             if (side === 'me') battle.foeHp -= dmg; else battle.myHp -= dmg;
             renderBattle();
             const target = side === 'me' ? $('#foeBox') : $('#myBox');
@@ -1843,37 +1893,86 @@
             }
         };
 
-        function win() {
-            battle.over = true; battle.busy = false;
+        function rewardCard({ boss, earnsPower, item, zone }) {
+            const tiles = [];
+            let d = 0;
+            const add = (html, cls, c) => tiles.push(`<div class="rw ${cls}" style="--c:${c};--d:${(d++ * 0.25).toFixed(2)}s">${html}</div>`);
+            if (earnsPower) add('<b>+0.5</b><span>Poder de entrenador</span>', '', 'var(--blue)');
+            else add('<b>—</b><span>Sin poder (zona inferior al checkpoint)</span>', 'none', 'var(--line)');
+            add('<b>+1</b><span>Ticket</span>', '', 'var(--accent)');
+            if (boss) {
+                add('<b>+5</b><span>Monedas</span>', '', 'var(--gold)');
+                add(`<img src="${item.img}" alt="${item.name}" onerror="this.style.display='none'"><b>${item.name}</b><span>Objeto · guardado en la bolsa</span>`, 'item', 'var(--gold)');
+            }
+            const el = document.createElement('div');
+            el.className = 'reward' + (boss ? ' boss' : '');
+            el.innerHTML = `<div class="reward-title">${boss ? '¡Recompensa de jefe!' : 'Recompensas'}</div>
+        <div class="reward-grid">${tiles.join('')}</div>
+        ${zone ? `<div class="reward-zone">¡Zona ${zone} superada! Avanzas a la Zona ${zone + 1}.</div>` : ''}`;
+            const log = $('#log');
+            log.innerHTML = '';
+            log.appendChild(el);
+        }
+
+        async function win() {
+            const b = battle;
+            b.over = true; b.busy = false;
             const cp = maxZone();
-            const earnsPower = zoneOf(save.wildIndex) >= cp;   // zonas por debajo del checkpoint no dan poder
+            const earnsPower = zoneOf(save.wildIndex) >= cp;                 // zonas por debajo del checkpoint no dan poder
+            const isBoss = save.wildIndex % ZONE_SIZE === ZONE_SIZE - 1;     // último combate de la zona
             save.tickets += 1;
             if (earnsPower) save.power += 0.5;
+
+            // Recompensa extra del jefe: solo en tu zona más alta alcanzada (checkpoint) o superior
+            let reward = null;
+            if (isBoss && earnsPower) {
+                reward = SHOP_ITEMS[Math.floor(Math.random() * SHOP_ITEMS.length)];
+                save.coins += 5;
+                save.items = save.items || {};
+                save.items[reward.id] = itemCount(reward.id) + 1;
+            }
+
             save.wildIndex += 1;
             save.maxZone = Math.max(cp, zoneOf(save.wildIndex));
+            const zoneDone = save.wildIndex % ZONE_SIZE === 0, zoneNum = save.wildIndex / ZONE_SIZE;
             persist(); renderHeader(); renderRun();
-            say(`¡${POKEDEX[battle.foeId].name} fue derrotado! ` + (earnsPower
-                ? '+0.5 poder de entrenador y +1 ticket.'
-                : '+1 ticket (zona inferior al checkpoint: sin poder de entrenador).'));
-            if (save.wildIndex % ZONE_SIZE === 0) {
-                say(`¡Zona ${save.wildIndex / ZONE_SIZE} superada! Avanzas a la Zona ${save.wildIndex / ZONE_SIZE + 1}.`);
-            }
+
+            // Primero "derrotado", después la tarjeta de recompensas (con la zona superada dentro)
+            say(`¡<b>${POKEDEX[b.foeId].name}</b> fue derrotado!`, 'win');
+            await wait(1000);
+            if (battle !== b) return;
+            rewardCard({ boss: !!reward, earnsPower, item: reward, zone: zoneDone ? zoneNum : 0 });
             $('#nextBtn').classList.remove('hidden');
         }
-        function lose() {
-            battle.over = true; battle.busy = false;
+
+        // Vuelve al inicio de la zona actual (compartido por perder y por el botón "Reiniciar Zona")
+        function resetToZoneStart() {
             const wins = save.wildIndex;
+            let newRecord = false;
             if (wins > (save.record || 0)) {
                 save.record = wins;
                 save.recordName = POKEDEX[WILD_ORDER[(wins - 1) % WILD_ORDER.length]].name;
-                say(`¡Nuevo récord: ${save.recordName} - ${wins}!`);
+                newRecord = true;
             }
-            // Vuelves al inicio de la zona actual, no al primer salvaje
             const checkpoint = Math.floor(wins / ZONE_SIZE) * ZONE_SIZE;
-            save.wildIndex = checkpoint; persist(); renderRun();
-            say(`${POKEDEX[battle.myId].name} no puede continuar... ` + (checkpoint === 0
+            save.wildIndex = checkpoint;
+            persist();
+            return { wins, newRecord, checkpoint };
+        }
+
+        async function lose() {
+            const b = battle;
+            b.over = true; b.busy = false;
+            const r = resetToZoneStart();
+            renderRun();
+            if (r.newRecord) {
+                say(`¡Nuevo récord: <b>${save.recordName}</b> - ${r.wins}!`, 'record');
+                await wait(1300);
+                if (battle !== b) return;
+            }
+            say(`${POKEDEX[b.myId].name} no puede continuar... ` + (r.checkpoint === 0
                 ? 'Vuelves a empezar desde el primer Pokémon salvaje.'
-                : `Vuelves al inicio de la Zona ${checkpoint / ZONE_SIZE + 1}, contra ${POKEDEX[WILD_ORDER[checkpoint % WILD_ORDER.length]].name}.`));
+                : `Vuelves al inicio de la Zona ${r.checkpoint / ZONE_SIZE + 1}, contra ${POKEDEX[WILD_ORDER[r.checkpoint % WILD_ORDER.length]].name}.`), 'lose');
             $('#retryBtn').classList.remove('hidden');
         }
         $('#nextBtn').onclick = startBattle;
@@ -1952,7 +2051,6 @@
 <button data-pick="${p.id}" ${save.companion === p.id ? 'disabled' : ''}>${save.companion === p.id ? 'Compañero' : 'Elegir'}</button>
     </div>`).join('');
             document.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {
-                if (battle?.busy) { alert('Espera a que termine el turno de combate.'); return; }
                 if (save.companion === b.dataset.pick) return;
 
                 // Antes de reiniciar la run, se guarda como récord si era la mejor
@@ -1965,6 +2063,7 @@
                 save.companion = b.dataset.pick;
                 // Igual que al perder: vuelves al inicio de la zona actual, no al primer salvaje
                 save.wildIndex = Math.floor(wins / ZONE_SIZE) * ZONE_SIZE;
+                battle = null;   // corta el combate en curso; al volver a Combate empieza uno nuevo
                 persist(); renderRun(); renderMons();
             });
             document.querySelectorAll('[data-up]').forEach(b => b.onclick = () => {
@@ -2005,9 +2104,16 @@
         /* ================= BOLSA ================= */
 
         let bagUse = null, bagResult = null;   // objeto elegido / último resultado
+        let bagQ = '', bagSort = 'name';       // buscador y orden al elegir Pokémon
 
         const applyFx = (s, fx) => {
-            const [a, b] = fx.swap, n = { atk: s.atk, def: s.def, spd: s.spd, hp: s.hp };
+            const n = { atk: s.atk, def: s.def, spd: s.spd, hp: s.hp };
+            if (fx.add) {                                   // efecto de sumar/restar
+                const r = { ...n };
+                for (const k in fx.add) r[k] = n[k] + fx.add[k];
+                return Object.values(r).some(v => v < 1) ? n : r;   // si algún stat bajaría de 1, no se aplica
+            }
+            const [a, b] = fx.swap;
             if (fx.scaled) { n[a] = Math.max(1, Math.round(s[b] / 10)); n[b] = s[a] * 10; }
             else { n[a] = s[b]; n[b] = s[a]; }
             return n;
@@ -2033,7 +2139,6 @@
       <div class="chips">${changeChips(bagResult.before, bagResult.after)}</div>
       <div class="row">
         ${itemCount(it.id) > 0 ? `<button class="ghost" data-again="${it.id}">Usar otro (${itemCount(it.id)})</button>` : ''}
-        <button data-back>Volver a la bolsa</button>
       </div>
     </div>`;
                 box.querySelector('[data-back]').onclick = () => { bagResult = null; renderBag(); };
@@ -2043,26 +2148,61 @@
             }
 
             // 2) Elegir a qué Pokémon aplicarlo
+            // 2) Elegir a qué Pokémon aplicarlo
             if (bagUse) {
                 const it = SHOP_ITEMS.find(x => x.id === bagUse), fx = ITEM_FX[bagUse];
                 const head = `<div class="bag-title"><div><h2>${it.name}</h2><p class="note">Elige el Pokémon al que aplicarlo (${itemCount(it.id)} disponibles).</p></div>
           <button class="ghost" data-back>Cancelar</button></div>`;
                 if (!save.owned.length) {
                     box.innerHTML = head + '<p class="empty">Aún no tienes Pokémon.</p>';
-                } else {
-                    box.innerHTML = head + save.owned.map(id => {
-                        const p = POKEDEX[id], now = pick4(statsOf(id)), next = applyFx(now, fx);
+                    box.querySelector('[data-back]').onclick = () => { bagUse = null; renderBag(); };
+                    return;
+                }
+                box.innerHTML = head + `
+        <div class="bag-tools">
+          <input id="bagSearch" type="search" placeholder="Buscar por nombre" aria-label="Buscar por nombre">
+          <select id="bagSortSel" aria-label="Ordenar">
+            <option value="name">Ordenar por nombre</option>
+            <option value="score">Ordenar por puntuación</option>
+            <option value="atk">Ordenar por ataque</option>
+            <option value="def">Ordenar por defensa</option>
+            <option value="spd">Ordenar por velocidad</option>
+            <option value="hp">Ordenar por vida</option>
+          </select>
+        </div>
+        <div class="contents" id="bagMons"></div>`;
+
+                const paint = () => {
+                    const q = bagQ.trim().toLowerCase();
+                    const list = save.owned.map(id => ({ id, ...statsOf(id) }))
+                        .filter(p => p.name.toLowerCase().includes(q))
+                        .sort((a, b) => {
+                            if (bagSort === 'score') return b.score - a.score || a.name.localeCompare(b.name);
+                            if (bagSort === 'atk') return b.atk - a.atk;
+                            if (bagSort === 'def') return b.def - a.def;
+                            if (bagSort === 'spd') return b.spd - a.spd;
+                            if (bagSort === 'hp') return b.hp - a.hp;
+                            return a.name.localeCompare(b.name);
+                        });
+                    $('#bagMons').innerHTML = list.length ? list.map(p => {
+                        const now = pick4(p), next = applyFx(now, fx);
                         const same = ['atk', 'def', 'spd', 'hp'].every(k => now[k] === next[k]);
                         return `<div class="card">
           <img src="${p.img}" alt="${p.name}">
           <div class="name">${p.name}</div>
           <div class="chips">${changeChips(now, next)}</div>
-          <button data-apply="${id}" ${same ? 'disabled' : ''}>${same ? 'Sin cambios' : 'Aplicar'}</button>
+          <button data-apply="${p.id}" ${same ? 'disabled' : ''}>${same ? 'Sin cambios' : 'Aplicar'}</button>
         </div>`;
-                    }).join('');
-                }
+                    }).join('') : '<p class="empty">Ningún Pokémon coincide con la búsqueda.</p>';
+                    box.querySelectorAll('[data-apply]').forEach(b => b.onclick = () => applyItem(b.dataset.apply));
+                };
+
+                $('#bagSearch').value = bagQ;
+                $('#bagSortSel').value = bagSort;
+                $('#bagSearch').oninput = e => { bagQ = e.target.value; paint(); };
+                $('#bagSortSel').onchange = e => { bagSort = e.target.value; paint(); };
                 box.querySelector('[data-back]').onclick = () => { bagUse = null; renderBag(); };
-                box.querySelectorAll('[data-apply]').forEach(b => b.onclick = () => applyItem(b.dataset.apply));
+                paint();
                 return;
             }
 
